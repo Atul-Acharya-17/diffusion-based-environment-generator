@@ -13,24 +13,21 @@ def train(model: any, scheduler: DiffusionScheduler, clip_model: any, optimizer:
             x0 = x0.to(device)
             t = torch.randint(0, len(scheduler.timesteps), (x0.shape[0],), device=device)
 
-            # Encode text conditions
             text = "MNIST digit"
             text_embeddings = clip_model.text_encode(text).to(device)
             empty_embeddings = clip_model.text_encode("").to(device)
             text_embeddings = torch.cat([empty_embeddings, text_embeddings])  # [unconditional, conditional]
 
-            # Generate noisy input
             noise = torch.randn_like(x0)
-            xt = noise  # Start training from random noise
+            xt = noise
 
-            # Predict noise for both unconditional and conditional embeddings
+            # Predict noise
             noise_pred = model(xt, t, encoder_hidden_states=text_embeddings).sample
             noise_pred_uncond, noise_pred_text = noise_pred.chunk(2)  # Split into uncond & cond
 
             # Classifier-Free Guidance Scaling
             noise_pred = noise_pred_uncond + guidance_scale * (noise_pred_text - noise_pred_uncond)
 
-            # Loss and optimization
             loss = nn.functional.mse_loss(noise_pred, noise)
             optimizer.zero_grad()
             loss.backward()
@@ -41,10 +38,10 @@ def train(model: any, scheduler: DiffusionScheduler, clip_model: any, optimizer:
     return model
 
 def sample(model: nn.Module, scheduler: DiffusionScheduler, clip_model: any, num_samples: int = 4):
-    x = torch.randn((num_samples, 4, 64, 64), device=device)  # Stable Diffusion uses 4 channels
+    x = torch.randn((num_samples, 4, 64, 64), device=device) 
     text_embeddings = clip_model.text_encode("MNIST digit").to(device)
     empty_embeddings = clip_model.text_encode("").to(device)
-    text_embeddings = torch.cat([empty_embeddings, text_embeddings])  # Concatenated for guidance
+    text_embeddings = torch.cat([empty_embeddings, text_embeddings])
 
     for t in tqdm(reversed(scheduler.timesteps), desc="Sampling"):
         with torch.no_grad():
