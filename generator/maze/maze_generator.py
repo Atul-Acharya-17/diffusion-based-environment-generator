@@ -11,18 +11,27 @@ from maze_dataset.generation import LatticeMazeGenerators
 def get_required_maze(dataset: MazeDataset, path_length: int):
     return list(filter(lambda maze: len(maze.solution) == path_length, dataset))
 
+def ascii_to_numpy(maze_ascii):
+    maze_2d = np.array([list(row) for row in maze_ascii.strip().split("\n")])
+
+    base = (maze_2d != "#").astype(np.uint8)
+    source = (maze_2d == "S").astype(np.uint8)
+    destination = (maze_2d == "E").astype(np.uint8)
+
+    return np.dstack((base, source, destination))
+
 def generate_dataset(n_mazes, directory):
     maze_dim = 5
     
     algorithms = {
-        "gen_dfs": LatticeMazeGenerators.gen_dfs,
-        "gen_wilson": LatticeMazeGenerators.gen_wilson,
-        "gen_prim": LatticeMazeGenerators.gen_prim
+        "gen_dfs": LatticeMazeGenerators.gen_dfs
+        # "gen_wilson": LatticeMazeGenerators.gen_wilson
+        # "gen_prim": LatticeMazeGenerators.gen_prim
     }
 
     idx = 0
     min_path_length = 2
-    max_path_length = 40
+    max_path_length = 70
     path_length = min_path_length
     seed = 0
 
@@ -39,7 +48,8 @@ def generate_dataset(n_mazes, directory):
                 name="train", # name is only for you to keep track of things
                 grid_n=maze_dim, # number of rows/columns in the lattice
                 n_mazes=10000, # number of mazes to generate
-                maze_ctor=algorithm # algorithm to generate the maze
+                maze_ctor=algorithm, # algorithm to generate the maze
+                maze_ctor_kwargs=dict(do_forks=True), 
             )
 
             dataset: MazeDataset = MazeDataset.from_config(cfg)
@@ -49,10 +59,14 @@ def generate_dataset(n_mazes, directory):
             print(len(required_mazes))
 
             for maze in required_mazes:
-                maze_pixels = maze.as_pixels()  # Shape: (height, width, 3), dtype=uint8
+
+                maze_numpy = ascii_to_numpy(maze.as_ascii())
+                maze_path_length = maze.as_ascii().count("X")
 
                 maze_filename = os.path.join(directory, f"maze_{idx}.npy")
-                np.save(maze_filename, maze_pixels)
+                path_length_filename = os.path.join(directory, f"path_length_{idx}.npy")
+                np.save(maze_filename, maze_numpy)
+                np.save(path_length_filename, maze_path_length)
 
                 idx += 1
 
