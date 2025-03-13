@@ -27,7 +27,7 @@ def ascii_to_numpy(maze_ascii):
     return np.dstack((base, source, destination))
 
 def generate_dataset(n_mazes, directory):
-    maze_dim = 5
+    maze_dim = 8
     
     algorithms = {
         "gen_dfs": LatticeMazeGenerators.gen_dfs
@@ -36,9 +36,9 @@ def generate_dataset(n_mazes, directory):
     }
 
     idx = 0
-    min_path_length = 2
-    max_path_length = 70
-    path_length = min_path_length
+    # min_path_length = 2
+    # max_path_length = 40
+    # path_length = min_path_length
     seed = 0
 
     os.makedirs(directory, exist_ok=True)
@@ -48,44 +48,37 @@ def generate_dataset(n_mazes, directory):
             seed += 1
             
             algorithm_name, algorithm = random.choice(list(algorithms.items()))
-
+            
             cfg: MazeDatasetConfig = MazeDatasetConfig(
                 seed=seed,
                 name="train", # name is only for you to keep track of things
                 grid_n=maze_dim, # number of rows/columns in the lattice
-                n_mazes=10000, # number of mazes to generate
-                maze_ctor=algorithm, # algorithm to generate the maze
-                maze_ctor_kwargs=dict(do_forks=True), 
+                n_mazes=1000, # number of mazes to generate
+                maze_ctor=algorithm # algorithm to generate the maze
+                
             )
-
+            
             dataset: MazeDataset = MazeDataset.from_config(cfg)
 
-            required_mazes = get_required_maze(dataset, path_length)
+            # required_mazes = get_required_maze(dataset, path_length)
+            # print(len(required_mazes))
 
-            print(len(required_mazes))
-
-            for maze in required_mazes:
-
-                maze_numpy = ascii_to_numpy(maze.as_ascii())
-                maze_path_length = maze.as_ascii().count("X")
+            for maze in dataset:
+                maze_pixels = maze.as_pixels()  # Shape: (height, width, 3)
 
                 maze_filename = os.path.join(directory, f"maze_{idx}.npy")
                 path_length_filename = os.path.join(directory, f"path_length_{idx}.npy")
                 np.save(maze_filename, maze_numpy)
                 np.save(path_length_filename, maze_path_length)
 
+                length_filename = os.path.join(directory, f"maze_{idx}_len.txt")
+                with open(length_filename, "w") as f:
+                    f.write(str(len(maze.solution)))
+
                 idx += 1
 
-            path_length = (path_length + 1) % (max_path_length + 1)
-            if path_length < min_path_length:
-                path_length = min_path_length
+            # path_length = (path_length + 1) % (max_path_length + 1)
+            # if path_length < min_path_length:
+            #     path_length = min_path_length
 
-            pbar.update(len(required_mazes))
-
-
-def main():
-    # TODO: make this configurable  
-    generate_dataset(100_000, "./data/")
-
-if __name__ == '__main__':
-    main()
+            pbar.update(len(dataset))
