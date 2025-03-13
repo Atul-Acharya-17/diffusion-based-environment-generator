@@ -1,4 +1,4 @@
 __pycache__/
 venv/
-/generator/data/
 *.pth
+*data/

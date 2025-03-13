@@ -29,7 +29,9 @@ class ConditioningEmbedding(nn.Module):
         )
         
     def forward(self, x):
+        x = x.float()
         return self.proj(x.unsqueeze(-1)).unsqueeze(1)  # (B, 1, d_context)
+        # return self.proj(x.unsqueeze(-1))  # (B, d_context)
 
 ## Unet residual Block
 class UNET_ResidualBlock(nn.Module):

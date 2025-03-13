@@ -11,7 +11,7 @@ from maze_dataset.generation import LatticeMazeGenerators
 def get_required_maze(dataset: MazeDataset, path_length: int):
     return list(filter(lambda maze: len(maze.solution) == path_length, dataset))
 
-def generate_dataset(n_mazes, directory):
+def generate_dataset(n_mazes, directory, seed: int = 0):
     maze_dim = 8
     
     algorithms = {
@@ -24,7 +24,7 @@ def generate_dataset(n_mazes, directory):
     # min_path_length = 2
     # max_path_length = 40
     # path_length = min_path_length
-    seed = 0
+    seed = seed
 
     os.makedirs(directory, exist_ok=True)
 
@@ -65,3 +65,12 @@ def generate_dataset(n_mazes, directory):
             #     path_length = min_path_length
 
             pbar.update(len(dataset))
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--n_mazes", type=int, default=1000)
+    parser.add_argument("--directory", type=str, default="data/mazes")
+    parser.add_argument("--seed", type=int, default=0)
+    args = parser.parse_args()
+
+    generate_dataset(args.n_mazes, args.directory, args.seed)
