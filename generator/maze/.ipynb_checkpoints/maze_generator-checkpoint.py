@@ -45,6 +45,7 @@ def generate_dataset(n_mazes, directory):
             
             dataset: MazeDataset = MazeDataset.from_config(cfg)
 
+            print("generated")
             # required_mazes = get_required_maze(dataset, path_length)
             # print(len(required_mazes))
 
