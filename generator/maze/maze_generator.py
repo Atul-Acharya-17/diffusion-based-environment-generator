@@ -14,6 +14,12 @@ def get_required_maze(dataset: MazeDataset, path_length: int):
 def ascii_to_numpy(maze_ascii):
     maze_2d = np.array([list(row) for row in maze_ascii.strip().split("\n")])
 
+    if 'S' not in maze_ascii:
+        print(maze_ascii)
+
+    if 'E' not in maze_ascii:
+        print(maze_ascii)
+
     base = (maze_2d != "#").astype(np.uint8)
     source = (maze_2d == "S").astype(np.uint8)
     destination = (maze_2d == "E").astype(np.uint8)
