@@ -12,13 +12,6 @@ class UNetTrainer():
         self.device = device
         self.num_timesteps = num_timesteps
 
-        # self.vae_encoder = VAE_Encoder().to(self.device).eval()
-        # self.decoder = VAE_Decoder().to(self.device).eval()
-        # checkpoint = torch.load(vae_model_path, map_location=self.device)
-        # self.vae_encoder.load_state_dict(checkpoint['encoder_state_dict'])
-        # self.decoder.load_state_dict(checkpoint['decoder_state_dict'])
-
-        # self.diffusion_model = Diffusion().to(device)
         self.scheduler = DDPMSampler(generator=torch.Generator(device=device), num_training_steps=self.num_timesteps)
 
     def train(self, diffusion_model:Diffusion, vae_encoder: VAE_Encoder, epochs: int, dataloader: DataLoader, latent_channels: int, guidance_scale: float):
