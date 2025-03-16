@@ -14,7 +14,7 @@ class UNetTrainer():
 
         self.scheduler = DDPMSampler(generator=torch.Generator(device=device), num_training_steps=self.num_timesteps)
 
-    def train(self, diffusion_model:Diffusion, vae_encoder: VAE_Encoder, epochs: int, dataloader: DataLoader, latent_channels: int, guidance_scale: float):
+    def train(self, diffusion_model:Diffusion, vae_encoder: VAE_Encoder, epochs: int, dataloader: DataLoader, latent_channels: int, guidance_scale: float, context_embedding_model: any):
         train_losses = []
         optimizer = torch.optim.Adam(diffusion_model.parameters(), lr=1e-4, weight_decay=0.01)
 
@@ -38,10 +38,12 @@ class UNetTrainer():
                 noisy_z = noisy_z.repeat(2, 1, 1, 1)
                 
                 # this is the context embedding that the model should move towards
-                context = diffusion_model.condition_embedding(path_lengths)
+                # context = diffusion_model.condition_embedding(path_lengths)
+                context = context_embedding_model(path_lengths)
 
                 # something like the a negative prompt.
-                unconditional_guidance_embeddings = diffusion_model.condition_embedding(zeros_tensor)
+                # unconditional_guidance_embeddings = diffusion_model.condition_embedding(zeros_tensor)
+                unconditional_guidance_embeddings = context_embedding_model(zeros_tensor)
                 conditional_guidance_embeddings = torch.cat([unconditional_guidance_embeddings, context])
                 
 
@@ -69,7 +71,7 @@ class UNetTrainer():
 
         return diffusion_model, train_losses
     
-    def eval_model(self, diffusion_model: Diffusion, decoder: VAE_Decoder, test_dataset: MazeTensorDataset, sample_idx: int=None, num_steps: int=50):
+    def eval_model(self, diffusion_model: Diffusion, decoder: VAE_Decoder, test_dataset: MazeTensorDataset, context_embedding_model: any, sample_idx: int=None, num_steps: int=50):
         self.scheduler.set_inference_timesteps(num_steps)
         
         if sample_idx is None:
@@ -77,6 +79,9 @@ class UNetTrainer():
         
         test_img, test_path_length = test_dataset[sample_idx]
         
+        # context = diffusion_model.condition_embedding(
+        #     torch.tensor([test_path_length], device=self.device).float()
+        # )
         context = diffusion_model.condition_embedding(
             torch.tensor([test_path_length], device=self.device).float()
         )
