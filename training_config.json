@@ -1,0 +1,13 @@
+{ 
+    "BATCH_SIZE":128,
+    "VAE_LEARNING_RATE": 1e-4,
+    "VAE_EPOCHS": 150,
+    "VAE_LATENT_CHANNELS": 4,
+    "VAE_MODELS_SAVE_PATH": "vae_model.pth",
+    "UNET_EPOCHS": 75,
+    "NUM_TIMESTEPS": 1000,
+    "UNET_LATENT_CHANNELS": 4,
+    "UNET_MODELS_SAVE_PATH": "unet_model.pth",
+    "GUIDANCE_SCALE": 7.5,
+    "PATH_EMBEDDING_CHOICE": "normal_path_length"
+}
