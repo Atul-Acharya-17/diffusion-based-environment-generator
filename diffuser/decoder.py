@@ -119,6 +119,9 @@ class VAE_Decoder(nn.Sequential):
             nn.Conv2d(128, 64, kernel_size=3, padding=1),
             VAE_ResBlock(64, 64),
             VAE_ResBlock(64, 64),
+
+            # Additional padding to achieve 10x10 output 
+            # nn.ConstantPad2d((1, 1, 1, 1), 0),
             
             # Output projection
             nn.GroupNorm(32, 64),
@@ -133,5 +136,7 @@ class VAE_Decoder(nn.Sequential):
 
         for module in self:
             x = module(x)
+
+        # x = x[:, :, 1:-1, 1:-1]
 
         return x

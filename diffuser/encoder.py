@@ -71,6 +71,8 @@ class VAE_Encoder(nn.Sequential):
             VAE_ResBlock(128, 256),
             VAE_ResBlock(256, 256),
             VAE_AttnBlock(256),
+
+            # nn.ConstantPad2d((0, 1, 0, 1), 0),
             
             # Output projection
             nn.GroupNorm(32, 256),

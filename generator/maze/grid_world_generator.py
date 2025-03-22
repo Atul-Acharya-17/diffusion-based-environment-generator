@@ -71,7 +71,8 @@ def generate_multiple_grid_worlds(num_worlds, size=10):
                 pbar.update(1)
 
 def main():
-    generate_multiple_grid_worlds(num_worlds=100_000)
+    # generate_multiple_grid_worlds(num_worlds=100_000)
+    generate_multiple_grid_worlds(num_worlds=1000)
 
 if __name__ == '__main__':
     main()
