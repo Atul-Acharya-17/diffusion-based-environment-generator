@@ -47,10 +47,17 @@ def bfs(grid, start, end):
 
 def generate_multiple_grid_worlds(num_worlds, size=10):
     maze_count = 0
-    directory = "./data/"
 
-    os.makedirs(directory, exist_ok=True)
-    
+    directory = "./data/"
+    grid_world_directory = directory + "grid/"
+    path_length_directory = directory + "path_length/"
+
+    # os.makedirs(directory, exist_ok=True)
+    os.makedirs(grid_world_directory, exist_ok=True)
+    os.makedirs(path_length_directory, exist_ok=True)
+
+    print(grid_world_directory)
+
     with tqdm(total=num_worlds, desc="Generating Grid Worlds") as pbar:
         while maze_count < num_worlds:
             grid, start, end = generate_grid_world(size)
@@ -62,8 +69,8 @@ def generate_multiple_grid_worlds(num_worlds, size=10):
                 grid_world[start[0], start[1], 1] = 1
                 grid_world[end[0], end[1], 2] = 1
 
-                maze_filename = os.path.join(directory, f"maze_{maze_count}.npy")
-                path_length_filename = os.path.join(directory, f"path_length_{maze_count}.npy")
+                maze_filename = os.path.join(grid_world_directory, f"maze_{maze_count}.npy")
+                path_length_filename = os.path.join(path_length_directory, f"path_length_{maze_count}.npy")
                 np.save(maze_filename, grid_world)
                 np.save(path_length_filename, path_length)
 
