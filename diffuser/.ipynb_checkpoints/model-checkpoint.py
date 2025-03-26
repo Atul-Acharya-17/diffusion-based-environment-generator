@@ -29,7 +29,9 @@ class ConditioningEmbedding(nn.Module):
         )
         
     def forward(self, x):
+        x = x.float()
         return self.proj(x.unsqueeze(-1)).unsqueeze(1)  # (B, 1, d_context)
+        # return self.proj(x.unsqueeze(-1))  # (B, d_context)
 
 ## Unet residual Block
 class UNET_ResidualBlock(nn.Module):
@@ -56,6 +58,8 @@ class UNET_ResidualBlock(nn.Module):
 
         time = F.silu(time)
         time = self.linear_time(time)
+        print(time.shape)
+        print(feature.shape)
         merged = feature + time.unsqueeze(-1).unsqueeze(-1)
 
         merged = self.group_norm_merge(merged)
