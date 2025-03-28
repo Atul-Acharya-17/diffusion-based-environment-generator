@@ -45,9 +45,9 @@ def bfs(grid, start, end):
     
     return None
 
-def generate_multiple_grid_worlds(num_worlds, size=10):
+def generate_multiple_grid_worlds(num_worlds, parent_directory="./data", size=10):
     maze_count = 0
-    directory = "./data/"
+    directory = f"{parent_directory}/mazes/"
 
     os.makedirs(directory, exist_ok=True)
     
