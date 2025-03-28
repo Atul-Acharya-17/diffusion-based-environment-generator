@@ -52,9 +52,9 @@ def a_star(maze, distance_fn: Callable[[Tuple[int, int], Tuple[int, int]], int])
 def euclidean_distance(a, b):
     return math.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2)
 
-def main():
-    input_directory = './data/'
-    output_directory = "./data/a_star_l2_results/"
+def main(parent_directory):
+    input_directory = f'{parent_directory}/mazes/'
+    output_directory = f"{parent_directory}/a_star_l2_results/"
 
     os.makedirs(output_directory, exist_ok=True)
 
@@ -78,4 +78,4 @@ def main():
             pbar.update(1)
 
 if __name__ == '__main__':
-    main()
+    main("./data")

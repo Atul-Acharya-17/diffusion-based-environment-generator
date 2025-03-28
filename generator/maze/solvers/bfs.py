@@ -64,10 +64,9 @@ def bfs_shortest_path(maze):
 
     return nodes_explored - 2 # exclude start and end
 
-def main():
-    # TODO: Make this configurable
-    input_directory = './data/'
-    output_directory = "./data/bfs_results/"
+def main(parent_directory):
+    input_directory = f'{parent_directory}/mazes/'
+    output_directory = f"{parent_directory}/bfs_results/"
 
     os.makedirs(output_directory, exist_ok=True)
 
@@ -92,4 +91,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    main("./data")

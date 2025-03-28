@@ -32,6 +32,18 @@ class ConditioningEmbedding(nn.Module):
         x = x.float()
         return self.proj(x.unsqueeze(-1)).unsqueeze(1)  # (B, 1, d_context)
         # return self.proj(x.unsqueeze(-1))  # (B, d_context)
+    
+class MultiFeatureConditioningEmbeddingDynamic(nn.Module): 
+    def __init__(self, input_size, d_context=768): 
+        super().__init__() 
+        # input_size is dynamically set based on the number of features provided 
+        self.proj = nn.Sequential( nn.Linear(input_size, 256), 
+                                  nn.SiLU(), 
+                                  nn.Linear(256, d_context), 
+                                  )  
+    def forward(self, x): 
+        x = x.float() # Convert to float 
+        return self.proj(x).unsqueeze(1) # Output shape: (B, 1, d_context)
 
 ## Unet residual Block
 class UNET_ResidualBlock(nn.Module):
@@ -216,7 +228,7 @@ class UNET_OutputLayer(nn.Module):
 
 class Diffusion(nn.Module):
 
-    def __init__(self, num_train_timesteps=1000):
+    def __init__(self, input_size=1, num_train_timesteps=1000):
         ## check if correct??????
         super().__init__()
         self.time_embed = nn.Embedding(num_train_timesteps, 320)
@@ -224,6 +236,7 @@ class Diffusion(nn.Module):
         self.unet = UNET()
         self.final = UNET_OutputLayer(320, 4)
         self.condition_embedding = ConditioningEmbedding()
+        self.condition_multidimensional_embedding = MultiFeatureConditioningEmbeddingDynamic(input_size)
 
     def forward(self, latent, context, timesteps):
         t_emb = self.time_mlp(self.time_embed(timesteps))
