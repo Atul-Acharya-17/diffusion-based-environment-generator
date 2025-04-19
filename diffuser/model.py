@@ -200,7 +200,6 @@ class UNET(nn.Module):
 
         
     def forward(self, x, context, time):
-
         skip_connections = []
         for layers in self.encoders:
             x = layers(x, context, time)
