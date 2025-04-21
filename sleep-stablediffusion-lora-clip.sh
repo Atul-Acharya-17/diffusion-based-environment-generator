@@ -9,8 +9,8 @@
 # Execute the Jupyter notebook file non-interactively
 srun jupyter nbconvert --execute --to notebook --inplace ./diffuser/StableDiffusion_LoRA_CLIP.ipynb
 
-# scp -r ./sleep-stablediffusion-lora.sh e1503329@xlogin.comp.nus.edu.sg:/home/e/e1503329/abhishek/diffusion_generator_code
-# scp -r ./StableDiffusion_LoRA-CLIP.ipynb e1503329@xlogin.comp.nus.edu.sg:/home/e/e1503329/abhishek/diffusion_generator_code/diffuser
+# scp -r ./sleep-stablediffusion-lora-clip.sh e1503329@xlogin.comp.nus.edu.sg:/home/e/e1503329/abhishek/diffusion_generator_code
+# scp -r ./StableDiffusion_LoRA_CLIP.ipynb e1503329@xlogin.comp.nus.edu.sg:/home/e/e1503329/abhishek/diffusion_generator_code/diffuser
 # scp -r ./StableDiffusion.ipynb e1503329@xlogin.comp.nus.edu.sg:/home/e/e1503329/abhishek/diffusion_generator_code/diffuser
 # scp -r ./diffusion-based-environment-generator/generator e1503329@xlogin.comp.nus.edu.sg:/home/e/e1503329/abhishek/diffusion_generator_code
 # scp -r ./diffusion-based-environment-generator/requirements.txt e1503329@xlogin.comp.nus.edu.sg:/home/e/e1503329/abhishek/diffusion_generator_code/requirements.txt
