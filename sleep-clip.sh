@@ -7,9 +7,10 @@
 #SBATCH -C cuda80
 
 # Execute the Jupyter notebook file non-interactively
-srun jupyter nbconvert --execute --to notebook --inplace ./diffuser/experiments_multi_feat_stablediffusion_vae.ipynb
+srun jupyter nbconvert --execute --to notebook --inplace ./diffuser/experiments_multi_feat_stablediffusion_vae_clip.ipynb
 
 # scp -r ./sleep.sh e1503329@xlogin.comp.nus.edu.sg:/home/e/e1503329/abhishek/diffusion_generator_code
+# scp -r ./sleep-clip.sh e1503329@xlogin.comp.nus.edu.sg:/home/e/e1503329/abhishek/diffusion_generator_code
 # scp -r ./experiments_multi_feat_stablediffusion_vae.ipynb e1503329@xlogin.comp.nus.edu.sg:/home/e/e1503329/abhishek/diffusion_generator_code/diffuser
 # scp -r ./experiments_multi_feat_stablediffusion_vae_clip.ipynb e1503329@xlogin.comp.nus.edu.sg:/home/e/e1503329/abhishek/diffusion_generator_code/diffuser
 # scp -r ./diffusion-based-environment-generator/generator e1503329@xlogin.comp.nus.edu.sg:/home/e/e1503329/abhishek/diffusion_generator_code
