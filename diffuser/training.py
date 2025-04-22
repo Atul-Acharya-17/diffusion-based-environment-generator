@@ -51,7 +51,7 @@ def plot_grid_world(grid):
 
     return img
 
-def load_dataset_from_npy(parent_directory="./data", target_size=32, max_samples=20000):
+def load_dataset_from_npy(parent_directory="./data", target_size=32, max_samples=25000):
     images = []
     path_lengths = []
     num_nodes_traversed_astar = []
@@ -134,146 +134,146 @@ images, org_path_lengths, num_nodes_astar, num_nodes_bfs = load_dataset_from_npy
 os.chdir("./diffuser")
 print(f"Current working directory: {os.getcwd()}")
 
-# Reload encoder and decoder modules for VAE training
-import torch
-from torch import nn, optim
-from torch.utils.data import DataLoader, Dataset
-import numpy as np
-import matplotlib.pyplot as plt
-from PIL import Image
-from maze_dataset.plotting import MazePlot
-import random
+# # Reload encoder and decoder modules for VAE training
+# import torch
+# from torch import nn, optim
+# from torch.utils.data import DataLoader, Dataset
+# import numpy as np
+# import matplotlib.pyplot as plt
+# from PIL import Image
+# from maze_dataset.plotting import MazePlot
+# import random
 
-import importlib
-import encoder
-import decoder
-importlib.reload(encoder)
-importlib.reload(decoder)
-from encoder import VAE_Encoder
-from decoder import VAE_Decoder
+# import importlib
+# import encoder
+# import decoder
+# importlib.reload(encoder)
+# importlib.reload(decoder)
+# from encoder import VAE_Encoder
+# from decoder import VAE_Decoder
 
-# # VAE hyperparameters
-BATCH_SIZE = 256
-LEARNING_RATE = 1e-4
-EPOCHS = 150
-LATENT_CHANNELS = 8
+# # # VAE hyperparameters
+# BATCH_SIZE = 256
+# LEARNING_RATE = 1e-4
+# EPOCHS = 150
+# LATENT_CHANNELS = 8
 
 path_lengths = org_path_lengths
 
-# Split the dataset
+# # Split the dataset
 
-total = len(images)
-test_size = int(0.2 * total)
-all_indices = list(range(total))
-random.shuffle(all_indices)
+# total = len(images)
+# test_size = int(0.2 * total)
+# all_indices = list(range(total))
+# random.shuffle(all_indices)
 
-test_indices = all_indices[:test_size]
-train_indices = all_indices[test_size:]
+# test_indices = all_indices[:test_size]
+# train_indices = all_indices[test_size:]
 
-train_images = [images[i] for i in train_indices]
-train_path_lengths = [path_lengths[i] for i in train_indices]
-train_num_nodes_astar = [num_nodes_astar[i] for i in train_indices]
-train_num_nodes_bfs = [num_nodes_bfs[i] for i in train_indices]
+# train_images = [images[i] for i in train_indices]
+# train_path_lengths = [path_lengths[i] for i in train_indices]
+# train_num_nodes_astar = [num_nodes_astar[i] for i in train_indices]
+# train_num_nodes_bfs = [num_nodes_bfs[i] for i in train_indices]
 
-test_images = [images[i] for i in test_indices]
-test_path_lengths = [path_lengths[i] for i in test_indices]
-test_num_nodes_astar = [num_nodes_astar[i] for i in test_indices]
-test_num_nodes_bfs = [num_nodes_bfs[i] for i in test_indices]
+# test_images = [images[i] for i in test_indices]
+# test_path_lengths = [path_lengths[i] for i in test_indices]
+# test_num_nodes_astar = [num_nodes_astar[i] for i in test_indices]
+# test_num_nodes_bfs = [num_nodes_bfs[i] for i in test_indices]
 
-dataset = MazeTensorDataset(train_images, train_path_lengths, train_num_nodes_astar, train_num_nodes_bfs)
-test_dataset = MazeTensorDataset(test_images, test_path_lengths, test_num_nodes_astar, test_num_nodes_bfs)
+# dataset = MazeTensorDataset(train_images, train_path_lengths, train_num_nodes_astar, train_num_nodes_bfs)
+# test_dataset = MazeTensorDataset(test_images, test_path_lengths, test_num_nodes_astar, test_num_nodes_bfs)
 
-print("Train dataset length:", len(dataset))
-print("Test dataset length:", len(test_dataset))
+# print("Train dataset length:", len(dataset))
+# print("Test dataset length:", len(test_dataset))
 
-dataloader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True)
+# dataloader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True)
 
-unique_train_paths = set(train_path_lengths)
-print("Unique training path lengths:", unique_train_paths)
-print("Number of unique training paths:", len(unique_train_paths))
+# unique_train_paths = set(train_path_lengths)
+# print("Unique training path lengths:", unique_train_paths)
+# print("Number of unique training paths:", len(unique_train_paths))
 
-unique_test_paths = set(test_path_lengths)
-print("Unique test path lengths:", unique_test_paths)
-print("Number of unique test paths:", len(unique_test_paths))
+# unique_test_paths = set(test_path_lengths)
+# print("Unique test path lengths:", unique_test_paths)
+# print("Number of unique test paths:", len(unique_test_paths))
 
-# Initialize VAE model and optimizer
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-vae_encoder = VAE_Encoder().to(device)
-vae_decoder = VAE_Decoder().to(device)
-optimizer = optim.Adam(list(vae_encoder.parameters()) + list(vae_decoder.parameters()), lr=LEARNING_RATE)
+# # Initialize VAE model and optimizer
+# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# vae_encoder = VAE_Encoder().to(device)
+# vae_decoder = VAE_Decoder().to(device)
+# optimizer = optim.Adam(list(vae_encoder.parameters()) + list(vae_decoder.parameters()), lr=LEARNING_RATE)
 
-def vae_loss(x, x_hat, mean, log_var):
-    recon_loss = nn.functional.mse_loss(x_hat, x, reduction='sum') / x.size(0)
-    kl_loss = 0.5 * (mean.pow(2) + log_var.exp() - log_var - 1).sum(dim=(1, 2, 3)).mean()
-    return recon_loss + kl_loss
+# def vae_loss(x, x_hat, mean, log_var):
+#     recon_loss = nn.functional.mse_loss(x_hat, x, reduction='sum') / x.size(0)
+#     kl_loss = 0.5 * (mean.pow(2) + log_var.exp() - log_var - 1).sum(dim=(1, 2, 3)).mean()
+#     return recon_loss + kl_loss
 
-train_losses = []
-val_losses = []
-val_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False)  # Validation dataloader
+# train_losses = []
+# val_losses = []
+# val_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False)  # Validation dataloader
 
-for epoch in range(EPOCHS):
-    vae_encoder.train()
-    vae_decoder.train()
-    train_loss = 0.0
+# for epoch in range(EPOCHS):
+#     vae_encoder.train()
+#     vae_decoder.train()
+#     train_loss = 0.0
 
-    for x in dataloader:
-        x = x[0].to(device)
-        batch_size = x.size(0)
-        # noise = torch.randn(batch_size, LATENT_CHANNELS, 8, 8).to(device)
-        noise = torch.randn(batch_size, LATENT_CHANNELS, 16, 16).to(device)
+#     for x in dataloader:
+#         x = x[0].to(device)
+#         batch_size = x.size(0)
+#         # noise = torch.randn(batch_size, LATENT_CHANNELS, 8, 8).to(device)
+#         noise = torch.randn(batch_size, LATENT_CHANNELS, 16, 16).to(device)
         
-        mean, log_var, z = vae_encoder(x, noise)
-        x_hat = vae_decoder(z)
-        loss = vae_loss(x, x_hat, mean, log_var)
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
-        train_loss += loss.item() * batch_size
+#         mean, log_var, z = vae_encoder(x, noise)
+#         x_hat = vae_decoder(z)
+#         loss = vae_loss(x, x_hat, mean, log_var)
+#         optimizer.zero_grad()
+#         loss.backward()
+#         optimizer.step()
+#         train_loss += loss.item() * batch_size
 
-    train_loss /= len(dataloader.dataset)
-    train_losses.append(train_loss)
+#     train_loss /= len(dataloader.dataset)
+#     train_losses.append(train_loss)
 
-    # --- VAE Validation Pass ---
-    vae_encoder.eval()
-    vae_decoder.eval()
-    val_loss = 0.0
-    with torch.no_grad():
-        for x in val_loader:
-            x = x[0].to(device)
-            # noise = torch.randn(x.size(0), LATENT_CHANNELS, 8, 8).to(device)
-            noise = torch.randn(x.size(0), LATENT_CHANNELS, 16, 16).to(device)
+#     # --- VAE Validation Pass ---
+#     vae_encoder.eval()
+#     vae_decoder.eval()
+#     val_loss = 0.0
+#     with torch.no_grad():
+#         for x in val_loader:
+#             x = x[0].to(device)
+#             # noise = torch.randn(x.size(0), LATENT_CHANNELS, 8, 8).to(device)
+#             noise = torch.randn(x.size(0), LATENT_CHANNELS, 16, 16).to(device)
             
-            mean, log_var, z = vae_encoder(x, noise)
-            x_hat = vae_decoder(z)
-            loss = vae_loss(x, x_hat, mean, log_var)
-            val_loss += loss.item() * x.size(0)
-    val_loss /= len(val_loader.dataset)
-    val_losses.append(val_loss)
-    print(f"Epoch [{epoch+1}/{EPOCHS}], Train Loss: {train_loss:.4f}, Val Loss: {val_loss:.4f}")
+#             mean, log_var, z = vae_encoder(x, noise)
+#             x_hat = vae_decoder(z)
+#             loss = vae_loss(x, x_hat, mean, log_var)
+#             val_loss += loss.item() * x.size(0)
+#     val_loss /= len(val_loader.dataset)
+#     val_losses.append(val_loss)
+#     print(f"Epoch [{epoch+1}/{EPOCHS}], Train Loss: {train_loss:.4f}, Val Loss: {val_loss:.4f}")
 
-# Plot and save VAE training loss curve
-plt.figure(figsize=(10, 5))
-plt.plot(range(1, EPOCHS + 1), train_losses, label='Train Loss')
-plt.xlabel('Epoch')
-plt.ylabel('Loss')
-plt.title('VAE Training Loss')
-plt.legend()
-vae_loss_curve_filename = f"loss_curve_VAE_{get_timestamp()}.png"
-plt.savefig(vae_loss_curve_filename)
+# # Plot and save VAE training loss curve
+# plt.figure(figsize=(10, 5))
+# plt.plot(range(1, EPOCHS + 1), train_losses, label='Train Loss')
+# plt.xlabel('Epoch')
+# plt.ylabel('Loss')
+# plt.title('VAE Training Loss')
+# plt.legend()
+# vae_loss_curve_filename = f"loss_curve_VAE_{get_timestamp()}.png"
+# plt.savefig(vae_loss_curve_filename)
 
-# Save VAE model weights with a timestamp
-vae_weights_filename = f"vae_weights_{get_timestamp()}.pth"
-torch.save({
-    'encoder_state_dict': vae_encoder.state_dict(),
-    'decoder_state_dict': vae_decoder.state_dict(),
-    'optimizer_state_dict': optimizer.state_dict(),
-}, vae_weights_filename)
-print(f"Model weights saved to {vae_weights_filename}")
+# # Save VAE model weights with a timestamp
+# vae_weights_filename = f"vae_weights_{get_timestamp()}.pth"
+# torch.save({
+#     'encoder_state_dict': vae_encoder.state_dict(),
+#     'decoder_state_dict': vae_decoder.state_dict(),
+#     'optimizer_state_dict': optimizer.state_dict(),
+# }, vae_weights_filename)
+# print(f"Model weights saved to {vae_weights_filename}")
 
 # --- Diffusion Training Section ---
 # Diffusion hyperparameters
-BATCH_SIZE = 256
-EPOCHS = 50
+BATCH_SIZE = 64
+EPOCHS = 100
 NUM_TIMESTEPS = 1000
 LATENT_CHANNELS = 8
 LEARNING_RATE = 1e-5
@@ -330,7 +330,7 @@ from model import Diffusion
 from ddpm import DDPMSampler
 # from classifier_guidance.models import Classifier
 
-# vae_weights_filename = "good_vae.pth"
+vae_weights_filename = "good_vae_16.pth"
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 vae_encoder = VAE_Encoder().to(device).eval()
@@ -427,6 +427,10 @@ for epoch in range(EPOCHS):
             noisy_z, noise_used = scheduler.add_noise(z, timesteps)
 
             noisy_z = noisy_z.repeat(2, 1, 1, 1)
+
+            print(noisy_z.shape)
+            print(noise_used.shape)
+            
             timesteps = timesteps.repeat_interleave(2)
 
             combined_features = torch.stack((path_lengths, nodes_astar), dim=-1)

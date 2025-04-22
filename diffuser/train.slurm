@@ -22,6 +22,8 @@ echo "=============================="
 export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH
 echo "LD_LIBRARY_PATH set to: $LD_LIBRARY_PATH"
 
+echo "25k images, 100 epochs, f1 loss"
+
 # Run training
 python training.py 2>&1 || { echo "training.py crashed with above error"; exit 1; }
 # papermill experiments_multi_feat.ipynb outs.ipynb

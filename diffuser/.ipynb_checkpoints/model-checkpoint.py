@@ -235,7 +235,8 @@ class Diffusion(nn.Module):
         self.time_embed = nn.Embedding(num_train_timesteps, 320)
         self.time_mlp = TimeEmbedding(320)
         self.unet = UNET()
-        self.final = UNET_OutputLayer(320, 4)
+        # self.final = UNET_OutputLayer(320, 4)
+        self.final = UNET_OutputLayer(320, 8)
         self.condition_embedding = ConditioningEmbedding()
         self.condition_multidimensional_embedding = MultiFeatureConditioningEmbeddingDynamic(input_size)
 
