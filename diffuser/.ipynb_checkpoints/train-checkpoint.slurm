@@ -24,5 +24,6 @@ echo "LD_LIBRARY_PATH set to: $LD_LIBRARY_PATH"
 
 # Run training
 python training.py 2>&1 || { echo "training.py crashed with above error"; exit 1; }
+# papermill experiments_multi_feat.ipynb outs.ipynb
 
 echo "Job finished at $(date)"
