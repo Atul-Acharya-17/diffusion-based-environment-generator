@@ -16,6 +16,6 @@ srun jupyter nbconvert --execute --to notebook --inplace ./diffuser/experiments_
 # scp -r ./diffusion-based-environment-generator/generator e1503329@xlogin.comp.nus.edu.sg:/home/e/e1503329/abhishek/diffusion_generator_code
 # scp -r ./diffusion-based-environment-generator/requirements.txt e1503329@xlogin.comp.nus.edu.sg:/home/e/e1503329/abhishek/diffusion_generator_code/requirements.txt
 # scp -r e1503329@xlogin.comp.nus.edu.sg:/home/e/e1503329/abhishek/diffusion_generator_code/data/loss_curves_20250331_012340/loss_curve_diffusion_multi_feat_20250331_012340.png .
-# scp -r e1503329@xlogin.comp.nus.edu.sg:/home/e/e1503329/abhishek/diffusion_generator_code/data/loss_curves_20250421_211635/stable_diffusion_diffusion_models/diffusion_image_generation_multi_feat_20250421_211635.png .
-# scp -r e1503329@xlogin.comp.nus.edu.sg:/home/e/e1503329/abhishek/diffusion_generator_code/data/loss_curves_20250421_211635/stable_diffusion_diffusion_models/loss_curve_diffusion_multi_feat_20250421_211635.png .
+# scp -r e1503329@xlogin.comp.nus.edu.sg:/home/e/e1503329/abhishek/diffusion_generator_code/data/loss_curves_20250421_230124/stable_diffusion_diffusion_models/diffusion_image_generation_multi_feat_20250421_230124.png .
+# scp -r e1503329@xlogin.comp.nus.edu.sg:/home/e/e1503329/abhishek/diffusion_generator_code/data/loss_curves_20250421_230124/stable_diffusion_diffusion_models/loss_curve_diffusion_multi_feat_20250421_230124.png .
 # scp -r ./diffusion-based-environment-generator/data/vae_weights_20250326_065408.pth e1503329@xlogin.comp.nus.edu.sg:/home/e/e1503329/abhishek/diffusion_generator_code/data/vae_weights_20250326_065408.pth
