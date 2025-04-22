@@ -2,6 +2,9 @@ import os
 import numpy as np
 from heapq import heappop, heappush
 from tqdm import tqdm
+import math
+
+from typing import Callable, Tuple
 
 def load_maze(file_path):
     return np.load(file_path)
@@ -53,7 +56,7 @@ def euclidean_distance(a, b):
     return math.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2)
 
 def main():
-    input_directory = './data/'
+    input_directory = './data/grid/'
     output_directory = "./data/a_star_l2_results/"
 
     os.makedirs(output_directory, exist_ok=True)

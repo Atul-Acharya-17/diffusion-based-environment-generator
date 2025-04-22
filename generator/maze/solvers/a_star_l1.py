@@ -55,7 +55,7 @@ def manhattan_distance(a, b):
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
 def main():
-    input_directory = './data/'
+    input_directory = './data/grid/'
     output_directory = "./data/a_star_l1_results/"
 
     os.makedirs(output_directory, exist_ok=True)

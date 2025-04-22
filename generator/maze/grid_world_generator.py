@@ -5,7 +5,7 @@ import numpy as np
 import os
 
 def generate_grid_world(size=10):    
-    num_walls = random.randint(0, 90)
+    num_walls = random.randint(10, 40)
     
     grid = [[1 for _ in range(size)] for _ in range(size)]
     
@@ -18,7 +18,10 @@ def generate_grid_world(size=10):
     while True:
         start = (random.randint(0, size-1), random.randint(0, size-1))
         end = (random.randint(0, size-1), random.randint(0, size-1))
-        if start != end and grid[start[0]][start[1]] == 1 and grid[end[0]][end[1]] == 1:
+
+        manhattan_dist = abs(start[0] - end[0]) + abs(start[1] - end[1])
+
+        if start != end and grid[start[0]][start[1]] == 1 and grid[end[0]][end[1]] == 1 and manhattan_dist >= 3:
             break
 
     return grid, start, end
